@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# Coverage
+.coverage/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+
+# IDE configs
+.idea
+
+# Locked versions
+package-lock.json

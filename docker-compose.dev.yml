@@ -1,0 +1,29 @@
+services:
+  server:
+    container_name: uniwork_server
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app               # Mount local code into container
+      - /app/node_modules    # Keep container's node_modules separate
+    ports:
+      - "${SERVER_PORT}:8000"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  db:
+    container_name: uniwork_db
+    image: postgres:18
+    restart: on-failure:3
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - uniwork_db_data:/var/lib/postgresql
+
+volumes:
+  uniwork_db_data:
