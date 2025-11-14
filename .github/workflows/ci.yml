@@ -18,6 +18,16 @@ jobs:
           node-version: 24
           cache: 'npm'
 
+      - name: Firebase credentials file
+        run: |
+          echo "$FIREBASE_CREDENTIALS_B64" | base64 -d > .firebase.json
+        env:
+          FIREBASE_CREDENTIALS_B64: ${{ secrets.FIREBASE_CREDENTIALS_B64 }}
+      - name: Firebase credentials path
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/.firebase.json" >> $GITHUB_ENV
+      - name: Firebase web api key
+        run: echo "FIREBASE_WEB_API_KEY=${{ secrets.FIREBASE_WEB_API_KEY }}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: npm ci
 
