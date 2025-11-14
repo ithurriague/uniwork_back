@@ -15,3 +15,9 @@ node_modules/
 
 # Locked versions
 package-lock.json
+
+# Firebase admin-sdk credentials
+.firebase.json
+
+# Test storage
+.jest-localstorage

@@ -1,15 +1,29 @@
 import {Pool} from 'pg';
 
-const pool = new Pool({
-    connectionString: process.env.POSTGRES_CONNECTION_STRING,
-    ssl: process.env.ENV === 'production' ? {rejectUnauthorized: false} : false,
-    connectionTimeoutMillis: 2000,
-    statement_timeout: 2000,
-});
+import Config, {ENV} from '../../config/config.js';
 
-pool.on('error', (err) => {
-    console.error('postgreSQL pool error', err);
-    process.exit(1);
-});
+let pool = null;
+export default function getPostgresql() {
+    if (pool) {
+        return pool;
+    }
 
-export default pool;
+    try {
+        pool = new Pool({
+            connectionString: process.env.POSTGRES_CONNECTION_STRING,
+            // TODO: replace ssl config with actual cert configuration
+            ssl: Config.env() === ENV.PRODUCTION ? {rejectUnauthorized: false} : false,
+            connectionTimeoutMillis: 2000,
+            statement_timeout: 2000,
+        });
+    } catch (err) {
+        throw new Error(err);
+    }
+
+    pool.on('error', (err) => {
+        console.error('postgreSQL pool error', err);
+        process.exit(1);
+    });
+
+    return pool;
+}
