@@ -13,9 +13,6 @@ node_modules/
 # IDE configs
 .idea
 
-# Locked versions
-package-lock.json
-
 # Firebase admin-sdk credentials
 .firebase.json
 
