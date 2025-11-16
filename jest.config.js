@@ -2,10 +2,12 @@ export default {
     testEnvironment: 'node',
     verbose: true,
     clearMocks: true,
-    roots: ['<rootDir>/modules'],
+    roots: [
+        '<rootDir>/modules',
+        '<rootDir>/src',
+    ],
     testMatch: [
-        '**/__tests__/**/*.test.js',
-        '**/?(*.)+(test).js',
+        '**/?(*.)+(test|integration.test).js'
     ],
     collectCoverage: true,
     coverageProvider: 'v8',
@@ -18,10 +20,10 @@ export default {
             statements: 80
         },
     },
-    coveragePathIgnorePatterns: [
-        '/node_modules/',
-        '/.coverage/',
-        '/__mocks__/',
-        '.*route.*\\.js',
-    ]
+    collectCoverageFrom: [
+        'modules/**/*.js',
+        'src/**/*.js',
+        '!**/routes.js',
+        '!**/server.js',
+    ],
 };
