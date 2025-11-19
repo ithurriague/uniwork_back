@@ -3,14 +3,14 @@ import {Pool} from 'pg';
 import Config, {ENV} from '../../config/config.js';
 
 let pool = null;
-export default function getPostgresql() {
+export default function getConn() {
     if (pool) {
         return pool;
     }
 
     try {
         pool = new Pool({
-            connectionString: process.env.POSTGRES_CONNECTION_STRING,
+            connectionString: process.env.DATABASE_URL,
             // TODO: replace ssl config with actual cert configuration
             ssl: Config.env() === ENV.PRODUCTION ? {rejectUnauthorized: false} : false,
             connectionTimeoutMillis: 2000,

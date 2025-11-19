@@ -1,4 +1,4 @@
-import {ERROR} from '../../common/database/errors.js';
+import {ERROR} from '../../common/db/errors.js';
 
 /**
  * Repository for database health monitoring.

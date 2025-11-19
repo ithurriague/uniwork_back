@@ -1,13 +1,13 @@
 import {Router} from 'express';
 
 import Controller from './controller.js';
-import db from '../../../../common/database/postgresql.js';
+import getConn from '../../../../common/db/postgresql.js';
 import Repository from '../../repository.js';
 import Service from '../../service.js';
 
 const router = Router();
 
-const repository = new Repository(db);
+const repository = new Repository(getConn());
 const service = new Service(repository);
 const controller = new Controller(service);
 
