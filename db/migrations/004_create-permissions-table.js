@@ -11,7 +11,8 @@ export const shorthands = undefined;
 export const up = (pgm) => {
     pgm.createTable({schema: 'backend', name: 'permissions'}, {
         id: {type: 'serial', primaryKey: true},
-        name: {type: 'text', notNull: true, unique: true}
+        key: {type: 'text', notNull: true, unique: true},
+        label: {type: 'text', notNull: true}
     });
 };
 

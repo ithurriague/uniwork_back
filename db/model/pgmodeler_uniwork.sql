@@ -81,9 +81,10 @@ ALTER TABLE backend.users OWNER TO uniwork_owner_role;
 -- DROP TABLE IF EXISTS backend.roles CASCADE;
 CREATE TABLE backend.roles (
 	id integer NOT NULL GENERATED ALWAYS AS IDENTITY ,
-	name text NOT NULL,
+	key text NOT NULL,
+	label text NOT NULL,
 	CONSTRAINT roles_pk PRIMARY KEY (id),
-	CONSTRAINT roles_name_unique UNIQUE (name)
+	CONSTRAINT roles_key_unique UNIQUE (key)
 );
 -- ddl-end --
 ALTER TABLE backend.roles OWNER TO uniwork_owner_role;
@@ -93,9 +94,10 @@ ALTER TABLE backend.roles OWNER TO uniwork_owner_role;
 -- DROP TABLE IF EXISTS backend.permissions CASCADE;
 CREATE TABLE backend.permissions (
 	id integer NOT NULL GENERATED ALWAYS AS IDENTITY ,
-	name text NOT NULL,
+	key text NOT NULL,
+	label text NOT NULL,
 	CONSTRAINT permissions_pk PRIMARY KEY (id),
-	CONSTRAINT permissions_name_unique UNIQUE (name)
+	CONSTRAINT permissions_key_unique UNIQUE (key)
 );
 -- ddl-end --
 ALTER TABLE backend.permissions OWNER TO uniwork_owner_role;
