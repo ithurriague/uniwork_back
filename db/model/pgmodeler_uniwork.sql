@@ -250,13 +250,10 @@ ALTER TABLE backend.positions ADD CONSTRAINT positions_uq UNIQUE (categories_id)
 -- DROP TABLE IF EXISTS backend.skills CASCADE;
 CREATE TABLE backend.skills (
 	id integer NOT NULL GENERATED ALWAYS AS IDENTITY ,
-	entity_type text NOT NULL,
-	entity_id uuid NOT NULL,
-	name text NOT NULL,
-	expertise smallint NOT NULL,
+	key text NOT NULL,
+	label text NOT NULL,
 	CONSTRAINT skills_pk PRIMARY KEY (id),
-	CONSTRAINT expertise_range_1_10 CHECK (expertise BETWEEN 1 AND 10),
-	CONSTRAINT entity_type_user_position CHECK (entity_type IN ('user', 'position'))
+	CONSTRAINT skills_key_unique UNIQUE (key)
 );
 -- ddl-end --
 COMMENT ON TABLE backend.skills IS E'polymorphic between positions and users';
@@ -269,6 +266,56 @@ ALTER TABLE backend.skills OWNER TO uniwork_owner_role;
 ALTER TABLE backend.positions ADD CONSTRAINT users_fk FOREIGN KEY (users_id)
 REFERENCES backend.users (id) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: backend.many_users_has_many_skills | type: TABLE --
+-- DROP TABLE IF EXISTS backend.many_users_has_many_skills CASCADE;
+CREATE TABLE backend.many_users_has_many_skills (
+	users_id uuid NOT NULL,
+	id_skills integer NOT NULL,
+	expertise smallint NOT NULL,
+	CONSTRAINT many_users_has_many_skills_pk PRIMARY KEY (users_id,id_skills),
+	CONSTRAINT expertise_range_1_10 CHECK (expertise BETWEEN 1 AND 10)
+);
+-- ddl-end --
+
+-- object: users_fk | type: CONSTRAINT --
+-- ALTER TABLE backend.many_users_has_many_skills DROP CONSTRAINT IF EXISTS users_fk CASCADE;
+ALTER TABLE backend.many_users_has_many_skills ADD CONSTRAINT users_fk FOREIGN KEY (users_id)
+REFERENCES backend.users (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: skills_fk | type: CONSTRAINT --
+-- ALTER TABLE backend.many_users_has_many_skills DROP CONSTRAINT IF EXISTS skills_fk CASCADE;
+ALTER TABLE backend.many_users_has_many_skills ADD CONSTRAINT skills_fk FOREIGN KEY (id_skills)
+REFERENCES backend.skills (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: backend.many_positions_has_many_skills | type: TABLE --
+-- DROP TABLE IF EXISTS backend.many_positions_has_many_skills CASCADE;
+CREATE TABLE backend.many_positions_has_many_skills (
+	positions_id uuid NOT NULL,
+	id_skills integer NOT NULL,
+	importance smallint NOT NULL,
+	CONSTRAINT many_positions_has_many_skills_pk PRIMARY KEY (positions_id,id_skills),
+	CONSTRAINT importance_range_1_10 CHECK (importance BETWEEN 1 AND 10)
+);
+-- ddl-end --
+
+-- object: positions_fk | type: CONSTRAINT --
+-- ALTER TABLE backend.many_positions_has_many_skills DROP CONSTRAINT IF EXISTS positions_fk CASCADE;
+ALTER TABLE backend.many_positions_has_many_skills ADD CONSTRAINT positions_fk FOREIGN KEY (positions_id)
+REFERENCES backend.positions (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
+-- ddl-end --
+
+-- object: skills_fk | type: CONSTRAINT --
+-- ALTER TABLE backend.many_positions_has_many_skills DROP CONSTRAINT IF EXISTS skills_fk CASCADE;
+ALTER TABLE backend.many_positions_has_many_skills ADD CONSTRAINT skills_fk FOREIGN KEY (id_skills)
+REFERENCES backend.skills (id) MATCH FULL
+ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: rater_id_users | type: CONSTRAINT --
