@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.2.2" use-changelog="false" max-obj-count="10"
+	 gen-disabled-objs-code="false" show-sys-schemas-rects="true"
+	 last-position="0,118" last-zoom="0.7" scene-rect="-128,0,2109.33,1422.12"
+	 default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<role name="uniwork_ro_role"
+ inherit="true">
+</role>
+
+<role name="uniwork_wo_role"
+ inherit="true">
+</role>
+
+<role name="uniwork_backend_user"
+ login="true">
+</role>
+
+<role name="uniwork_rw_role"
+ inherit="true">
+	<roles names="uniwork_backend_user" role-type="member" />
+</role>
+
+<role name="uniwork_owner_role"
+ inherit="true">
+</role>
+
+<database name="uniwork" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<schema name="backend" layers="0" rect-visible="true" fill-color="#e1e1e1" name-color="#31363b">
+	<role name="postgres"/>
+</schema>
+
+<table name="users" layers="0" collapse-mode="2" max-obj-count="13" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<position x="1020" y="480"/>
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="user_type" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="uid" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phone">
+		<type name="text" length="0"/>
+	</column>
+	<column name="picture_url">
+		<type name="text" length="0"/>
+	</column>
+	<column name="university">
+		<type name="text" length="0"/>
+	</column>
+	<column name="degree">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<constraint name="users_pk" type="pk-constr" table="backend.users">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uid_unique" type="uq-constr" table="backend.users">
+		<columns names="uid" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="email_unique" type="uq-constr" table="backend.users">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="user_type_student_organization" type="ck-constr" table="backend.users">
+			<expression> <![CDATA[user_type IN ('user', 'organization')]]> </expression>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="roles_id" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="roles_fk" index="1"/>
+	</customidxs></table>
+
+<table name="roles" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<position x="1600" y="480"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="key" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="label" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="roles_pk" type="pk-constr" table="backend.roles">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="roles_key_unique" type="uq-constr" table="backend.roles">
+		<columns names="key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="permissions" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<position x="1580" y="960"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="key" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="label" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="permissions_pk" type="pk-constr" table="backend.permissions">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="permissions_key_unique" type="uq-constr" table="backend.permissions">
+		<columns names="key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="roles_has_many_users" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#cf22a2"
+	 src-table="backend.roles"
+	 dst-table="backend.users"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="many_roles_has_many_permissions" type="relnn" layers="0"
+	 src-col-pattern="{sc}_{st}" dst-col-pattern="{sc}_{dt}"
+	 pk-pattern="{gt}_pk" uq-pattern="{gt}_uq"
+	 src-fk-pattern="{st}_fk" dst-fk-pattern="{dt}_fk"
+	 pk-col-pattern="id"
+	 fk-idx-pattern="{gt}_idx"
+	 custom-color="#1800c1"
+	 src-table="backend.roles"
+	 dst-table="backend.permissions"
+	 src-required="false" dst-required="false"
+	 table-name="many_roles_has_many_permissions"/>
+
+<table name="categories" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<position x="-100" y="480"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="category_pk" type="pk-constr" table="backend.categories">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<usertype name="application_status" configuration="enumeration">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<enumeration label="accepted"/>
+	<enumeration label="rejected"/>
+	<enumeration label="pending"/>
+	<enumeration label="expired"/>
+</usertype>
+
+<table name="ratings" layers="0" collapse-mode="2" max-obj-count="10" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<position x="1020" y="960"/>
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="rater_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="ratee_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="rater_type" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="ratee_type" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="stars" not-null="true">
+		<type name="decimal" length="2" precision="1"/>
+	</column>
+	<column name="review">
+		<type name="text" length="0"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<constraint name="ratings_pk" type="pk-constr" table="backend.ratings">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="stars_range_step_0_5" type="ck-constr" table="backend.ratings">
+			<expression> <![CDATA[stars >= 0 AND stars <= 5 AND stars * 2 = floor(stars * 2)]]> </expression>
+	</constraint>
+	<constraint name="rater_type_student_organization" type="ck-constr" table="backend.ratings">
+			<expression> <![CDATA[rater_type IN ('user', 'organization')]]> </expression>
+	</constraint>
+	<constraint name="ratee_type_student_organization" type="ck-constr" table="backend.ratings">
+			<expression> <![CDATA[ratee_type IN ('user', 'organization')]]> </expression>
+	</constraint>
+	<constraint name="rater_ratee_types" type="ck-constr" table="backend.ratings">
+			<expression> <![CDATA[ (rater_type = 'student' AND ratee_type = 'organization')
+ OR (rater_type = 'organization' AND ratee_type = 'student')]]> </expression>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="applications_id" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="applications_fk" index="2"/>
+	</customidxs></table>
+
+<table name="positions" layers="0" collapse-mode="2" max-obj-count="12" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<position x="380" y="480"/>
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="pay">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="location">
+		<type name="text" length="0"/>
+	</column>
+	<column name="is_remote">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="updated_at" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<constraint name="positions_pk" type="pk-constr" table="backend.positions">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="remote_check" type="ck-constr" table="backend.positions">
+			<expression> <![CDATA[is_remote = true OR location IS NOT NULL]]> </expression>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="categories_id" index="2"/>
+		<object name="users_id" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="categories_fk" index="4"/>
+		<object name="positions_uq" index="3"/>
+		<object name="users_fk" index="1"/>
+	</customidxs></table>
+
+<table name="applications" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<position x="380" y="960"/>
+	<column name="id" not-null="true" default-value="gen_random_uuid()" generated="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="status" not-null="true">
+		<type name="backend.application_status" length="0"/>
+	</column>
+	<column name="created_at" not-null="true" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="updated_at" default-value="NOW()">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<constraint name="applications_pk" type="pk-constr" table="backend.applications">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="positions_id" index="2"/>
+		<object name="users_id" index="1"/>
+	</customidxs>
+	<customidxs object-type="constraint">
+		<object name="applications_uq" index="3"/>
+		<object name="positions_fk" index="2"/>
+		<object name="users_fk" index="1"/>
+	</customidxs></table>
+
+<relationship name="users_has_many_applications" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#38b90c"
+	 src-table="backend.users"
+	 dst-table="backend.applications"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="applications_has_one_positions" type="rel11" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#18288c"
+	 src-table="backend.positions"
+	 dst-table="backend.applications"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="applications_has_many_ratings" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#c42e53"
+	 src-table="backend.applications"
+	 dst-table="backend.ratings"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="positions_has_one_category" type="rel11" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#c0ae04"
+	 src-table="backend.categories"
+	 dst-table="backend.positions"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="-13.1796" y="1.20901"/>
+	</label>
+</relationship>
+
+<table name="skills" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="backend"/>
+	<role name="uniwork_owner_role"/>
+	<comment> <![CDATA[polymorphic between positions and users]]> </comment>
+	<position x="720" y="180"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="key" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="label" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="skills_pk" type="pk-constr" table="backend.skills">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="skills_key_unique" type="uq-constr" table="backend.skills">
+		<columns names="key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="users_has_many_positions" type="rel1n" layers="0"
+	 src-col-pattern="{st}_{sc}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 fk-idx-pattern="{st}_idx"
+	 custom-color="#712dd1"
+	 src-table="backend.users"
+	 dst-table="backend.positions"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="many_users_has_many_skills" type="relnn" layers="0"
+	 src-col-pattern="{st}_{sc}" dst-col-pattern="{sc}_{dt}"
+	 pk-pattern="{gt}_pk" uq-pattern="{gt}_uq"
+	 src-fk-pattern="{st}_fk" dst-fk-pattern="{dt}_fk"
+	 pk-col-pattern="id"
+	 fk-idx-pattern="{gt}_idx"
+	 custom-color="#45a9cf"
+	 src-table="backend.users"
+	 dst-table="backend.skills"
+	 src-required="false" dst-required="false"
+	 table-name="many_users_has_many_skills">
+	<label ref-type="src-label">
+		<position x="0" y="0"/>
+	</label>
+	<label ref-type="name-label">
+		<position x="58.7149" y="-91.503"/>
+	</label>
+	<column name="expertise" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="expertise_range_1_10" type="ck-constr" table="backend.many_users_has_many_skills">
+			<expression> <![CDATA[expertise BETWEEN 1 AND 10]]> </expression>
+	</constraint>
+</relationship>
+
+<relationship name="many_positions_has_many_skills" type="relnn" layers="0"
+	 src-col-pattern="{st}_{sc}" dst-col-pattern="{sc}_{dt}"
+	 pk-pattern="{gt}_pk" uq-pattern="{gt}_uq"
+	 src-fk-pattern="{st}_fk" dst-fk-pattern="{dt}_fk"
+	 pk-col-pattern="id"
+	 fk-idx-pattern="{gt}_idx"
+	 custom-color="#d8dd40"
+	 src-table="backend.positions"
+	 dst-table="backend.skills"
+	 src-required="false" dst-required="false"
+	 table-name="many_positions_has_many_skills">
+	<label ref-type="name-label">
+		<position x="-44.8028" y="-85.853"/>
+	</label>
+	<column name="importance" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<constraint name="importance_range_1_10" type="ck-constr" table="backend.many_positions_has_many_skills">
+			<expression> <![CDATA[importance BETWEEN 1 AND 10]]> </expression>
+	</constraint>
+</relationship>
+
+<constraint name="rater_id_users" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="backend.users" table="backend.ratings">
+	<columns names="rater_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="ratee_id_users" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="backend.users" table="backend.ratings">
+	<columns names="ratee_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_ratings_users" type="relfk" layers="0"
+	 src-table="backend.ratings"
+	 dst-table="backend.users" reference-fk="rater_id_users"
+	 src-required="false" dst-required="true"/>
+
+<relationship name="rel_ratings_users1" type="relfk" layers="0"
+	 src-table="backend.ratings"
+	 dst-table="backend.users" reference-fk="ratee_id_users"
+	 src-required="false" dst-required="true"/>
+
+<permission>
+	<object name="backend" type="schema"/>
+	<roles names="uniwork_rw_role"/>
+	<privileges create="true" usage="true"/>
+</permission>
+</dbmodel>

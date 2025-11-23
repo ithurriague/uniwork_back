@@ -1,5 +1,5 @@
 {
-  "name": "seminario_analista_s21_back",
+  "name": "uniwork_back",
   "version": "0.0.0",
   "description": "Primary, stable branch in the repository. Final stage.<br/> Protected by: **pull requests**, **peer review rules**, **automated tests**.<br/> All changes are merged here only after passing the review stage on `dev` branch.",
   "repository": {
@@ -15,11 +15,18 @@
     "lint": "eslint . --ext .js,.cjs,.mjs",
     "lint:fix": "npx eslint . --fix",
     "test": "NODE_OPTIONS='--localstorage-file=.jest-localstorage --experimental-vm-modules' jest --config jest.config.js --runInBand",
-    "test:login": "node tools/login.js"
+    "test:login": "node tools/login.js",
+    "migrate:up": "node-pg-migrate up --config-file migration.config.json --migrations-dir db/migrations",
+    "migrate:down": "node-pg-migrate down --config-file migration.config.json --migrations-dir db/migrations",
+    "docker:migrate:up": "docker exec -it uniwork_server npm run migrate:up",
+    "docker:migrate:down": "docker exec -it uniwork_server npm run migrate:down",
+    "docker:session:db": "docker exec -it uniwork_db psql -U uniwork_backend_user -d uniwork",
+    "docker:session:server": "docker exec -it uniwork_server /bin/bash"
   },
   "dependencies": {
     "express": "^5.1.0",
     "firebase-admin": "^13.6.0",
+    "node-pg-migrate": "^8.0.3",
     "pg": "^8.16.3",
     "pino": "^10.1.0"
   },
