@@ -19,7 +19,7 @@ export const up = (pgm) => {
         location: {type: 'text'},
         is_remote: {type: 'boolean'},
         created_at: {type: 'timestamptz', notNull: true, default: pgm.func('NOW()')},
-        updated_at: {type: 'timestamptz', default: pgm.func('NOW()')}
+        updated_at: {type: 'timestamptz'}
     });
 
     pgm.addConstraint({schema: 'backend', name: 'positions'}, 'remote_check', {

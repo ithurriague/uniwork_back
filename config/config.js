@@ -54,4 +54,13 @@ export default class Config {
     static logLevel() {
         return process.env.LOG_LEVEL || 'info';
     }
+
+    static dbURL() {
+        const url = process.env.DATABASE_URL;
+        if (!url) {
+            throw new Error(ERROR.MISSING_ENV_DATABASE_URL);
+        }
+
+        return url;
+    }
 }

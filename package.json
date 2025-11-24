@@ -15,13 +15,15 @@
     "lint": "eslint . --ext .js,.cjs,.mjs",
     "lint:fix": "npx eslint . --fix",
     "test": "NODE_OPTIONS='--localstorage-file=.jest-localstorage --experimental-vm-modules' jest --config jest.config.js --runInBand",
-    "test:login": "node tools/login.js",
-    "migrate:up": "node-pg-migrate up --config-file migration.config.json --migrations-dir db/migrations",
-    "migrate:down": "node-pg-migrate down --config-file migration.config.json --migrations-dir db/migrations",
-    "docker:migrate:up": "docker exec -it uniwork_server npm run migrate:up",
-    "docker:migrate:down": "docker exec -it uniwork_server npm run migrate:down",
-    "docker:session:db": "docker exec -it uniwork_db psql -U uniwork_backend_user -d uniwork",
-    "docker:session:server": "docker exec -it uniwork_server /bin/bash"
+    "session:db": "docker exec -it uniwork_db psql -U uniwork_backend_user -d uniwork",
+    "session:server": "docker exec -it uniwork_server /bin/bash",
+    "migrate:up": "docker exec -it uniwork_server npx node-pg-migrate up -m db/migrations",
+    "migrate:down": "docker exec -it uniwork_server npx node-pg-migrate down -m db/migrations",
+    "migrate:down:all": "docker exec -it uniwork_server npx node-pg-migrate down -m db/migrations -- 0",
+    "seed:dev": "docker exec -it uniwork_server node tools/seed.js dev",
+    "seed:prod": "docker exec -it uniwork_server node tools/seed.js prod",
+    "tools:login": "node tools/login.js",
+    "tools:timestamp": "node tools/timestamp.js"
   },
   "dependencies": {
     "express": "^5.1.0",
@@ -33,6 +35,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.0",
     "@eslint/json": "^0.13.2",
+    "@faker-js/faker": "^10.1.0",
     "@jest/globals": "^30.2.0",
     "dotenv": "^17.2.3",
     "eslint": "^9.39.0",

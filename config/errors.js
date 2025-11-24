@@ -5,5 +5,6 @@ export const ERROR = {
     NOT_A_VALID_ENV: 'ENV environment variable is not a valid environment',
     MISSING_ENV_GOOGLE_APPLICATION_CREDENTIALS: `missing 'GOOGLE_APPLICATION_CREDENTIALS' environment variable`,
     MISSING_ENV_FIREBASE_WEB_API_KEY: `missing 'FIREBASE_WEB_API_KEY' environment variable`,
+    MISSING_ENV_DATABASE_URL: `missing 'DATABASE_URL' environment variable`,
 };
 

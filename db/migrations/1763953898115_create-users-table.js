@@ -24,7 +24,7 @@ export const up = (pgm) => {
     });
 
     pgm.addConstraint({schema: 'backend', name: 'users'}, 'user_type_student_organization', {
-        check: "user_type IN ('user', 'organization')"
+        check: "user_type IN ('student', 'organization')"
     });
 
     pgm.addConstraint({schema: 'backend', name: 'users'}, 'roles_fk', {

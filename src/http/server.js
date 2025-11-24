@@ -1,4 +1,5 @@
 import server from './routes.js';
+import log from '../../common/log/pino.js';
 import Config, {ENV} from '../../config/config.js';
 
 try {
@@ -9,9 +10,9 @@ try {
 
     const port = Config.port();
     server.listen(port, () => {
-        console.log(`server listening on port ${port}`);
+        log.info(`server listening on port ${port}`);
     });
 } catch (err) {
-    console.error('failed to start the server:', err.message);
+    log.error(err, 'failed to start the server');
     process.exit(1);
 }

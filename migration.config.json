@@ -1,8 +1,0 @@
-{
-  "schema": "public",
-  "dir": "db/migrations",
-  "direction": "up",
-  "migrationsSchema": "backend",
-  "migrationsTable": "migrations",
-  "createExtension": true
-}

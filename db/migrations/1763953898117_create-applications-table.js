@@ -15,7 +15,7 @@ export const up = (pgm) => {
         positions_id: {type: 'uuid', notNull: true},
         status: {type: 'backend.application_status', notNull: true},
         created_at: {type: 'timestamptz', notNull: true, default: pgm.func('NOW()')},
-        updated_at: {type: 'timestamptz', default: pgm.func('NOW()')}
+        updated_at: {type: 'timestamptz'}
     });
 
     pgm.addConstraint({schema: 'backend', name: 'applications'}, 'users_fk', {

@@ -1,4 +1,5 @@
 import {generateFirebaseAuthToken} from '../common/auth/generate_firebase_auth_token.js';
+import log from '../common/log/pino.js';
 
 const uidParamIndex = 2;
 try {
@@ -6,8 +7,8 @@ try {
     dotenv.config();
 
     const token = await generateFirebaseAuthToken(process.argv[uidParamIndex]);
-    console.log(token);
+    log.info(token);
 } catch (err) {
-    console.error('Error generating token:', err);
+    log.error(err, 'error generating token:');
     process.exit(1);
 }
