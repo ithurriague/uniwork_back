@@ -6,6 +6,11 @@ export const ENV = {
     PRODUCTION: 'production',
 };
 
+if (process.env.ENV === ENV.LOCAL) {
+    const dotenv = await import('dotenv');
+    dotenv.config();
+}
+
 export default class Config {
     static port() {
         const port = Number(process.env.SERVER_PORT);

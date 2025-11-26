@@ -1,10 +1,7 @@
-import express from 'express';
-
 import HealthcheckRoutes from '../../modules/healthcheck/adapters/http/routes.js';
+import UserRoutes from '../../modules/users/adapters/http/routes.js';
 
-const server = express();
-server.use(express.json());
-
-server.use('', HealthcheckRoutes);
-
-export default server;
+export default function register(server, container) {
+    server.use('', HealthcheckRoutes(container));
+    server.use('', UserRoutes(container));
+}

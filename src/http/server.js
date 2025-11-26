@@ -1,12 +1,17 @@
-import server from './routes.js';
+import express from 'express';
+
+import registerRoutes from './routes.js';
 import log from '../../common/log/pino.js';
-import Config, {ENV} from '../../config/config.js';
+import Config from '../../config/config.js';
+import build from '../http/container.js';
+
 
 try {
-    if (Config.env() === ENV.LOCAL) {
-        const dotenv = await import('dotenv');
-        dotenv.config();
-    }
+    const server = express();
+    server.use(express.json());
+    const container = build();
+
+    registerRoutes(server, container);
 
     const port = Config.port();
     server.listen(port, () => {
