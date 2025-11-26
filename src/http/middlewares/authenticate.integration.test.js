@@ -2,7 +2,7 @@ import {describe, it, expect, beforeAll, afterAll} from '@jest/globals';
 import dotenv from 'dotenv';
 import express from 'express';
 
-import authMiddleware from './auth.js';
+import authenticateMiddleware from './authenticate.js';
 import {ERROR} from '../../../common/auth/errors.js';
 import {generateFirebaseAuthToken} from '../../../common/auth/generate_firebase_auth_token.js';
 import {HTTP_STATUS} from '../../../common/http/status.js';
@@ -15,7 +15,7 @@ describe('Auth Middleware - Integration Test', () => {
         dotenv.config();
         server = express();
 
-        server.get('/test', authMiddleware, (req, res) => {
+        server.get('/test', authenticateMiddleware, (req, res) => {
             res.json({user: req.user});
         });
 

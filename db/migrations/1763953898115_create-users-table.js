@@ -14,7 +14,7 @@ export const up = (pgm) => {
         roles_id: {type: 'integer'},
         user_type: {type: 'text', notNull: true},
         uid: {type: 'text', notNull: true, unique: true},
-        email: {type: 'text', notNull: true, unique: true},
+        email: {type: 'text'},
         name: {type: 'text'},
         phone: {type: 'text'},
         picture_url: {type: 'text'},
@@ -35,6 +35,16 @@ export const up = (pgm) => {
             onUpdate: 'CASCADE'
         }
     });
+
+    pgm.addIndex(
+        {schema: 'backend', name: 'users'},
+        ['email'],
+        {
+            unique: true,
+            name: 'users_email_unique',
+            where: 'email IS NOT NULL'
+        }
+    );
 };
 
 /**

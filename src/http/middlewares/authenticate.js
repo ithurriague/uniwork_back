@@ -3,7 +3,7 @@ import firebase from '../../../common/auth/firebase.js';
 import {HTTP_STATUS} from '../../../common/http/status.js';
 import log from '../../../common/log/pino.js';
 
-export default async function auth(req, res, next) {
+export default async function authenticate(req, res, next) {
     const header = req.headers.authorization;
     if (!header) {
         return res.status(HTTP_STATUS.UNAUTHORIZED).json({error: ERROR.MISSING_BEARER_TOKEN});
