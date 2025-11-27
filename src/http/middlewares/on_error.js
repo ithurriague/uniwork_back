@@ -14,13 +14,13 @@ export default class Middleware {
             this.log.warn(err, 'HTTP error');
 
             return res.status(err.status).json({
-                message: err.message,
+                error: err.message,
             });
         }
 
         this.log.error(err, 'Unhandled error');
         return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-            message: 'Internal Server Error',
+            error: 'Internal Server Error',
         });
     };
 }

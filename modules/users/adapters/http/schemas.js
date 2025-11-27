@@ -1,5 +1,7 @@
 import {z} from 'zod';
 
+import {USER_TYPE} from '../../../../common/types/user_type.js';
+
 export const GetUsersSchema = {
     query: z.object({
         user_type: z.enum(['organization', 'student']),
@@ -21,11 +23,11 @@ export const GetUserByIDSchema = {
 
 export const CreateUserSchema = {
     body: z.object({
-        user_type: z.enum(['organization', 'student']),
+        user_type: z.enum([USER_TYPE.ORGANIZATION, USER_TYPE.STUDENT]),
         university: z.string().min(1).optional().transform((val) => val ?? null),
         degree: z.string().min(1).optional().transform((val) => val ?? null),
     }).superRefine((data, ctx) => {
-        if (data.user_type === 'student') {
+        if (data.user_type === USER_TYPE.STUDENT) {
             if (!data.university) {
                 ctx.addIssue({
                     message: 'university is required for students',
@@ -39,7 +41,7 @@ export const CreateUserSchema = {
                     path: ['degree'],
                 });
             }
-        } else if (data.user_type === 'organization') {
+        } else if (data.user_type === USER_TYPE.ORGANIZATION) {
             if (data.university) {
                 ctx.addIssue({
                     message: 'university must not be provided for organizations',
@@ -55,3 +57,10 @@ export const CreateUserSchema = {
         }
     })
 };
+
+export const DeleteUserByIDSchema = {
+    params: z.object({
+        id: z.uuid(),
+    }),
+};
+

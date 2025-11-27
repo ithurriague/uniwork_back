@@ -1,4 +1,6 @@
 import {ROLES} from '../../common/auth/roles.js';
+import {BadRequestError, ForbiddenError} from '../../common/http/errors.js';
+import {USER_TYPE} from '../../common/types/user_type.js';
 
 export default class Service {
     constructor(
@@ -22,30 +24,33 @@ export default class Service {
     }
 
     async create(user) {
-        const result = {
-            error: null,
+        const {roles} = await this.roleService.getAll();
+        const rolesIDS = Object.fromEntries(roles.map(row => [row.key, row.id]));
+
+        const userTypeToRoleKey = {
+            [USER_TYPE.STUDENT]: ROLES.STUDENT,
+            [USER_TYPE.ORGANIZATION]: ROLES.ORGANIZATION,
         };
 
-        const {roles, error: errGetAll} = await this.roleService.getAll();
-        if (errGetAll) {
-            result.error = errGetAll;
-            return result;
+        const roleKey = userTypeToRoleKey[user.type];
+        const roleID = rolesIDS[roleKey];
+
+        if (!roleID) {
+            throw new BadRequestError('user type not supported');
         }
 
-        const rolesIDS = Object.fromEntries(roles.map(row => [row.key, row.id]));
-        user.rolesID = rolesIDS[ROLES.ORGANIZATION];
-        if (!user.rolesID) {
-            result.error = 'role id not found';
-            return result;
-        }
-
-        const {error: errCreate} = await this.userRepository.create(user);
-        if (errCreate) {
-            result.error = errCreate;
-            return result;
-        }
-
-        return result;
+        return await this.userRepository.create({
+            ...user,
+            rolesID: roleID,
+        });
     }
 
+    async deleteByID(id, uid) {
+        const {user} = await this.userRepository.getByUID(uid);
+        if (user.id !== id) {
+            throw new ForbiddenError(`user id ${user.id} can only delete itself`);
+        }
+
+        return this.userRepository.deleteByID(id);
+    }
 }

@@ -8,7 +8,6 @@ export default class Controller {
     getAll = async (req, res) => {
         const {query} = req.validated;
         const result = await this.service.getAll({
-            user_type: query.user_type,
             limit: query.limit,
             offset: query.offset
         });
@@ -22,40 +21,41 @@ export default class Controller {
     };
 
     create = async (req, res) => {
-        const user = {
-            rolesID: null,
-            type: null,
-            uid: null,
-            email: null,
-            name: null,
-            phone: null,
-            pictureURL: null,
-            university: null,
-            degree: null,
+        const application = {
+            usersID: null,
+            positionsID: null,
+            status: null,
         };
-
 
         const {body} = req.validated;
 
-        // Request body
-        user.type = body.user_type;
-        user.university = body.university;
-        user.degree = body.degree;
+        application.usersID = req.user.id;
+        application.positionsID = body.positions_id;
 
-        // Token
-        user.uid = req.token.uid;
-        user.email = req.token.email;
-        user.name = req.token.name;
-        user.phone = req.token.phone;
-        user.pictureURL = req.token.picture;
-
-        await this.service.create(user);
+        await this.service.create(application);
         return res.status(HTTP_STATUS.CREATED).end();
+    };
+
+    update = async (req, res) => {
+        const application = {
+            usersID: null,
+            positionsID: null,
+            status: null,
+        };
+
+        const {body} = req.validated;
+
+        application.usersID = req.user.id;
+        application.positionsID = body.positions_id;
+        application.status = body.status;
+
+        await this.service.update(application);
+        return res.status(HTTP_STATUS.NO_CONTENT).end();
     };
 
     deleteByID = async (req, res) => {
         const {params} = req.validated;
-        await this.service.deleteByID(params.id, req.token.uid);
+        await this.service.deleteByID(params.id, req.user.id);
         res.status(HTTP_STATUS.NO_CONTENT).end();
     };
 }

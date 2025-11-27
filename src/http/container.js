@@ -2,6 +2,9 @@ import NodeCache from 'node-cache';
 
 import getPool from '../../common/db/postgresql.js';
 import log from '../../common/log/pino.js';
+import ApplicationController from '../../modules/applications/adapters/http/controller.js';
+import ApplicationRepository from '../../modules/applications/repository.js';
+import ApplicationService from '../../modules/applications/service.js';
 import CategoryController from '../../modules/categories/adapters/http/controller.js';
 import CategoryRepository from '../../modules/categories/repository.js';
 import CategoryService from '../../modules/categories/service.js';
@@ -46,18 +49,24 @@ export default function build() {
     const positionService = new PositionService(positionRepository, categoryService);
     const positionController = new PositionController(positionService);
 
+    // Application
+    const applicationRepository = new ApplicationRepository(getPool(), cache);
+    const applicationService = new ApplicationService(applicationRepository);
+    const applicationController = new ApplicationController(applicationService);
+
     // Middlewares
     const errorMiddleware = new ErrorMiddleware(log);
     const authorizeMiddleware = new AuthorizeMiddleware(roleService, userService);
 
     return {
         Cache: cache,
+        ErrorMiddleware: errorMiddleware,
+        AuthorizeMiddleware: authorizeMiddleware,
         HealthcheckController: healthcheckController,
         CategoryController: categoryController,
         UserController: userController,
         PositionController: positionController,
-        ErrorMiddleware: errorMiddleware,
-        AuthorizeMiddleware: authorizeMiddleware,
+        ApplicationController: applicationController,
     };
 }
 
