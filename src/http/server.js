@@ -12,6 +12,7 @@ try {
     const container = build();
 
     registerRoutes(server, container);
+    server.use(container.ErrorMiddleware.onError);
 
     const port = Config.port();
     server.listen(port, () => {

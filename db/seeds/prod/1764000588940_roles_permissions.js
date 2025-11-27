@@ -130,7 +130,7 @@ export default async function seed(conn) {
             // noinspection SqlNoDataSourceInspection,SqlResolve
             await conn.query(
                 `
-                    INSERT INTO backend.roles_permissions (id_roles, id_permissions)
+                    INSERT INTO backend.roles_permissions (roles_id, permissions_id)
                     VALUES ($1, $2)
                     ON CONFLICT DO NOTHING
                 `,

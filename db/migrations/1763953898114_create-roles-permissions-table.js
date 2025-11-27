@@ -10,17 +10,17 @@ export const shorthands = undefined;
  */
 export const up = (pgm) => {
     pgm.createTable({schema: 'backend', name: 'roles_permissions'}, {
-        id_roles: {type: 'integer', notNull: true},
-        id_permissions: {type: 'integer', notNull: true},
+        roles_id: {type: 'integer', notNull: true},
+        permissions_id: {type: 'integer', notNull: true},
     });
 
     pgm.addConstraint({schema: 'backend', name: 'roles_permissions'}, 'roles_permissions_pkey', {
-        primaryKey: ['id_roles', 'id_permissions']
+        primaryKey: ['roles_id', 'permissions_id']
     });
 
     pgm.addConstraint({schema: 'backend', name: 'roles_permissions'}, 'roles_fk', {
         foreignKeys: {
-            columns: 'id_roles',
+            columns: 'roles_id',
             references: {schema: 'backend', name: 'roles'},
             onDelete: 'RESTRICT',
             onUpdate: 'CASCADE'
@@ -29,7 +29,7 @@ export const up = (pgm) => {
 
     pgm.addConstraint({schema: 'backend', name: 'roles_permissions'}, 'permissions_fk', {
         foreignKeys: {
-            columns: 'id_permissions',
+            columns: 'permissions_id',
             references: {schema: 'backend', name: 'permissions'},
             onDelete: 'RESTRICT',
             onUpdate: 'CASCADE'
