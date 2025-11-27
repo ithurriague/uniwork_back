@@ -1,14 +1,14 @@
 import {Router} from 'express';
 
-import {PERMISSIONS} from '../../../../common/auth/permissions.js';
-import authenticate from '../../../../src/http/middlewares/authenticate.js';
-import validate from '../../../../src/http/middlewares/validate.js';
 import {
     CreatePositionSchema,
     DeletePositionByIDSchema,
     GetPositionByIDSchema,
     GetPositionsSchema
-} from '../../schemas.js';
+} from './schemas.js';
+import {PERMISSIONS} from '../../../../common/auth/permissions.js';
+import authenticate from '../../../../src/http/middlewares/authenticate.js';
+import validate from '../../../../src/http/middlewares/validate.js';
 
 export default function register(container) {
     const router = Router();

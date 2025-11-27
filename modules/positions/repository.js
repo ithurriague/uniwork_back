@@ -1,10 +1,9 @@
 //noinspection SqlNoDataSourceInspection,SqlResolve
 
 import {ERROR} from '../../common/db/errors.js';
-import TransactionRepository from '../../common/db/transaction_repository.js';
 import {NotFoundError} from '../../common/http/errors.js';
 
-export default class Repository extends TransactionRepository {
+export default class Repository {
     constructor(
         db,
         cache,
@@ -16,7 +15,7 @@ export default class Repository extends TransactionRepository {
             throw new Error(ERROR.MISSING_CACHE_CONNECTION);
         }
 
-        super(db);
+        this.db = db;
         this.cache = cache;
     }
 
@@ -66,14 +65,14 @@ export default class Repository extends TransactionRepository {
         const {rows} = await this.db.query(query, [id]);
         result.position = rows[0];
         if (!result.position) {
-            throw new Error(`position with id ${id} not found`);
+            throw new NotFoundError(`position with id ${id} not found`);
         }
 
         return result;
     }
 
-    async create(position = {}, client = this.db) {
-        return await client.query(
+    async create(position = {}) {
+        return await this.db.query(
             `
                 INSERT INTO backend.positions (users_id, categories_id, name, description, pay, location, is_remote)
                 VALUES ($1, $2, $3, $4, $5, $6, $7)

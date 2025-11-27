@@ -1,7 +1,7 @@
 //noinspection SqlNoDataSourceInspection,SqlResolve
 
-import {ERROR} from '../../common/db/errors.js';
-import {NotFoundError} from '../../common/http/errors.js';
+import {ERROR, mapConflictError} from '../../common/db/errors.js';
+import {InternalServerError, NotFoundError} from '../../common/http/errors.js';
 
 export default class Repository {
     constructor(
@@ -139,24 +139,43 @@ export default class Repository {
     }
 
     async create(user = {}) {
-        return await this.db.query(
-            `
+        try {
+            await this.db.query(
+                `
                 INSERT INTO backend.users (roles_id, user_type, uid, email, name, phone, picture_url, university,
                                            degree)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             `
-            ,
-            [
-                user.rolesID,
-                user.type,
-                user.uid,
-                user.email,
-                user.name,
-                user.phone,
-                user.pictureURL,
-                user.university,
-                user.degree,
-            ]
-        );
+                ,
+                [
+                    user.rolesID,
+                    user.type,
+                    user.uid,
+                    user.email,
+                    user.name,
+                    user.phone,
+                    user.pictureURL,
+                    user.university,
+                    user.degree,
+                ]
+            );
+        } catch(err) {
+            mapConflictError(err, {
+                'users_uid_key': `user uid ${user.uid} already exists`
+            });
+        }
+    }
+
+    async deleteByID(id) {
+        const query = `
+            DELETE
+            FROM backend.users
+            WHERE id = $1
+        `;
+
+        const {rowCount} = await this.db.query(query, [id]);
+        if (rowCount <= 0) {
+            throw new InternalServerError(`failed to delete user id ${id}`);
+        }
     }
 }
