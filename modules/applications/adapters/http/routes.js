@@ -4,7 +4,8 @@ import {
     CreateApplicationsSchema,
     DeleteApplicationsByIDSchema,
     GetApplicationsByIDSchema,
-    GetApplicationsSchema, UpdateApplicationsSchema,
+    GetApplicationsSchema,
+    UpdateApplicationsSchema,
 } from './schemas.js';
 import {PERMISSIONS} from '../../../../common/auth/permissions.js';
 import authenticate from '../../../../src/http/middlewares/authenticate.js';
