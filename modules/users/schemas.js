@@ -3,15 +3,19 @@ import {z} from 'zod';
 export const GetUsersSchema = {
     query: z.object({
         user_type: z.enum(['organization', 'student']),
+        limit: z
+            .string()
+            .transform((val) => parseInt(val, 10))
+            .refine((num) => num > 0, {message: 'limit must be greater than 0'}),
+        offset: z
+            .string()
+            .transform((val) => parseInt(val, 10)),
     }),
 };
 
 export const GetUserByIDSchema = {
     params: z.object({
-        userID: z.uuid(),
-    }),
-    query: z.object({
-        user_type: z.enum(['organization', 'student']),
+        id: z.uuid(),
     }),
 };
 

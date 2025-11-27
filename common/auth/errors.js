@@ -3,9 +3,10 @@ export const ERROR = {
     INVALID_OR_EXPIRED_BEARER_TOKEN: `invalid or expired token`,
     FAILED_TO_INITIALIZE: `failed to initialize firebase`,
     FAILED_TO_EXCHANGE_CUSTOM_TOKEN: `failed to exchange custom token for firebase token`,
-    MISSING_REQUEST_USER: `missing user in request`,
+    MISSING_REQUEST_TOKEN: `missing token in request`,
     MISSING_USER_ROLE: `missing user role`,
     INSUFFICIENT_PERMISSIONS: `user has insufficient permissions to access this resource`,
-    AUTHORIZATION_FAILED: `an error ocurred during authorization`,
+    AUTHORIZATION_FAILED: `an error occurred during authorization`,
+    USER_NOT_FOUND: `user does not exist`,
     ROLE_NOT_FOUND: `role not found`,
 };

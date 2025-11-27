@@ -15,7 +15,7 @@ export default async function authenticate(req, res, next) {
     }
 
     try {
-        req.user = await firebase().auth().verifyIdToken(token);
+        req.token = await firebase().auth().verifyIdToken(token);
         return next();
     } catch (err) {
         log.error(err, ERROR.INVALID_OR_EXPIRED_BEARER_TOKEN);

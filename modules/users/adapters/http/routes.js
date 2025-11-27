@@ -9,7 +9,7 @@ export default function register(container) {
 
     router.post('/users', authenticate, validate(CreateUserSchema), container.UserController.create);
     router.get('/users', validate(GetUsersSchema), container.UserController.getAll);
-    router.get('/users/{id}', validate(GetUserByIDSchema), container.UserController.getByID);
+    router.get('/users/:id', validate(GetUserByIDSchema), container.UserController.getByID);
 
     return router;
 }

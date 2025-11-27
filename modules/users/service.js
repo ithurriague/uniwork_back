@@ -3,26 +3,30 @@ import {ROLES} from '../../common/auth/roles.js';
 export default class Service {
     constructor(
         userRepository,
-        rolesRepository,
+        roleService,
     ) {
         this.userRepository = userRepository;
-        this.rolesRepository = rolesRepository;
+        this.roleService = roleService;
     }
 
     async getAll(filter) {
         return this.userRepository.getAll(filter);
     }
 
-   async getByID(id, userType) {
-        return this.userRepository.getByID(id, userType);
+   async getByID(id) {
+        return this.userRepository.getByID(id);
    }
+
+    async getByUID(uid) {
+        return this.userRepository.getByUID(uid);
+    }
 
     async create(user) {
         const result = {
             error: null,
         };
 
-        const {roles, error: errGetAll} = await this.rolesRepository.getAll();
+        const {roles, error: errGetAll} = await this.roleService.getAll();
         if (errGetAll) {
             result.error = errGetAll;
             return result;

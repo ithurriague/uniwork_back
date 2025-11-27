@@ -6,23 +6,19 @@ export default class Controller {
     }
 
     getAll = async (req, res) => {
-        try {
-            const {query} = req.validated;
-            const result = await this.service.getAll({user_type: query.user_type});
-            res.status(HTTP_STATUS.OK).json(result);
-        } catch (err) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({error: err.message});
-        }
+        const {query} = req.validated;
+        const result = await this.service.getAll({
+            user_type: query.user_type,
+            limit: query.limit,
+            offset: query.offset
+        });
+        res.status(HTTP_STATUS.OK).json(result);
     };
 
     getByID = async (req, res) => {
-        try {
-            const {params, query} = req.validated;
-            const result = await this.service.getByID(params.id, query.user_type);
-            res.status(HTTP_STATUS.OK).json(result);
-        } catch (err) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({error: err.message});
-        }
+        const {params} = req.validated;
+        const result = await this.service.getByID(params.id);
+        res.status(HTTP_STATUS.OK).json(result);
     };
 
     create = async (req, res) => {
@@ -39,30 +35,25 @@ export default class Controller {
         };
 
 
-        try {
-            const {body} = req.validated;
+        const {body} = req.validated;
 
-            // Request body
-            user.type = body.user_type;
-            user.university = body.university;
-            user.degree = body.degree;
+        // Request body
+        user.type = body.user_type;
+        user.university = body.university;
+        user.degree = body.degree;
 
-            // Token
-            user.uid = req.user.uid;
-            user.email = req.user.email;
-            user.name = req.user.name;
-            user.phone = req.user.phone;
-            user.pictureURL = req.user.picture;
+        // Token
+        user.uid = req.token.uid;
+        user.email = req.token.email;
+        user.name = req.token.name;
+        user.phone = req.token.phone;
+        user.pictureURL = req.token.picture;
 
-            const result = await this.service.create(user);
-            if (result.error) {
-                res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(result);
-            } else {
-                res.status(HTTP_STATUS.OK).end();
-            }
-        } catch (err) {
-            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({error: err.message});
+        const result = await this.service.create(user);
+        if (result.error) {
+            res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(result);
+        } else {
+            res.status(HTTP_STATUS.OK).end();
         }
-
     };
 }
