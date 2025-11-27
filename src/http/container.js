@@ -14,6 +14,9 @@ import HealthcheckService from '../../modules/healthcheck/service.js';
 import PositionController from '../../modules/positions/adapters/http/controller.js';
 import PositionRepository from '../../modules/positions/repository.js';
 import PositionService from '../../modules/positions/service.js';
+import RatingController from '../../modules/ratings/adapters/http/controller.js';
+import RatingRepository from '../../modules/ratings/repository.js';
+import RatingService from '../../modules/ratings/service.js';
 import RoleRepository from '../../modules/roles/repository.js';
 import RoleService from '../../modules/roles/service.js';
 import UserController from '../../modules/users/adapters/http/controller.js';
@@ -54,6 +57,11 @@ export default function build() {
     const applicationService = new ApplicationService(applicationRepository);
     const applicationController = new ApplicationController(applicationService);
 
+    // Ratings
+    const ratingRepository = new RatingRepository(getPool(), cache);
+    const ratingService = new RatingService(ratingRepository, userService);
+    const ratingController = new RatingController(ratingService);
+
     // Middlewares
     const errorMiddleware = new ErrorMiddleware(log);
     const authorizeMiddleware = new AuthorizeMiddleware(roleService, userService);
@@ -67,6 +75,7 @@ export default function build() {
         UserController: userController,
         PositionController: positionController,
         ApplicationController: applicationController,
+        RatingController: ratingController,
     };
 }
 
